@@ -2,7 +2,8 @@
 
 namespace MargaTampu\LaravelTeamsLogging;
 
-use Monolog\Logger;
+use Monolog\LogRecord;
+use Monolog\Level;
 use Monolog\Handler\AbstractProcessingHandler;
 
 class LoggerHandler extends AbstractProcessingHandler
@@ -22,7 +23,7 @@ class LoggerHandler extends AbstractProcessingHandler
      * @param string $name
      * @param bool $bubble
      */
-    public function __construct($url, $level = MonologLogger::DEBUG, $style = 'simple', $name = 'Default', $bubble = true)
+    public function __construct($url, $level = Level::Debug, $style = 'simple', $name = 'Default', $bubble = true)
     {
         parent::__construct($level, $bubble);
 
@@ -36,7 +37,7 @@ class LoggerHandler extends AbstractProcessingHandler
      *
      * @return LoggerMessage
      */
-    protected function getMessage(array $record)
+    protected function getMessage(array $record): LoggerMessage
     {
         if ($this->style == 'card') {
             // Include context as facts to send to microsoft teams
@@ -65,7 +66,7 @@ class LoggerHandler extends AbstractProcessingHandler
      * @param String $message
      * @param array  $facts
      */
-    public function useCardStyling($name, $message, $facts)
+    public function useCardStyling($name, $message, $facts): array
     {
         $loggerColour = new LoggerColour($name);
 
@@ -97,7 +98,7 @@ class LoggerHandler extends AbstractProcessingHandler
      * @param String $name
      * @param String $message
      */
-    public function useSimpleStyling($name, $message)
+    public function useSimpleStyling($name, $message): LoggerMessage
     {
         $loggerColour = new LoggerColour($name);
 
@@ -110,7 +111,7 @@ class LoggerHandler extends AbstractProcessingHandler
     /**
      * @param array $record
      */
-    protected function write(array $record): void
+    protected function write(LogRecord $record): void
     {
         $json = json_encode($this->getMessage($record));
 
